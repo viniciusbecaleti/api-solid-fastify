@@ -1,0 +1,30 @@
+{
+  "name": "api-solid-fastify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsup src --out-dir build",
+    "start": "node build/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "9.16.0",
+    "@types/node": "22.10.2",
+    "eslint": "9.16.0",
+    "globals": "15.13.0",
+    "prettier": "3.4.2",
+    "tsup": "8.3.5",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2",
+    "typescript-eslint": "8.18.0"
+  },
+  "dependencies": {
+    "dotenv": "16.4.7",
+    "fastify": "5.1.0",
+    "zod": "3.24.1"
+  }
+}
