@@ -1,4 +1,5 @@
-import { PrismaUsersRepository } from '@/repositories/prisma-users.repository'
+import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users.repository'
+import { EmailAlreadyExistsError } from '@/services/errors/email-already-exists.error'
 import { RegisterService } from '@/services/register.service'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
@@ -22,7 +23,15 @@ export async function registerController(
 
     return reply.status(201).send()
   } catch (error) {
-    console.error(error)
-    return reply.status(409).send() // TODO: Handle error
+    if (error instanceof EmailAlreadyExistsError) {
+      return reply.status(409).send({
+        message: error.message
+      })
+    }
+
+    // TODO: fix me
+    return reply.status(500).send({
+      message: 'Internal server error'
+    })
   }
 }
