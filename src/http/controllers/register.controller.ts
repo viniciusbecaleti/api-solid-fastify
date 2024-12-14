@@ -16,8 +16,8 @@ export async function registerController(
   const { name, email, password } = registerBodySchema.parse(request.body)
 
   try {
-    const prismaUsersRepository = new PrismaUsersRepository()
-    const registerService = new RegisterService(prismaUsersRepository)
+    const usersRepository = new PrismaUsersRepository()
+    const registerService = new RegisterService(usersRepository)
     await registerService.execute({ name, email, password })
 
     return reply.status(201).send()
