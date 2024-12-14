@@ -29,9 +29,6 @@ export async function registerController(
       })
     }
 
-    // TODO: fix me
-    return reply.status(500).send({
-      message: 'Internal server error'
-    })
+    throw error
   }
 }
