@@ -1,17 +1,22 @@
 import { IUsersRepository } from '@/repositories/users.repository'
 import { genSalt, hash } from 'bcryptjs'
 import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
+import type { User } from '@prisma/client'
 
-interface RegisterServiceRequest {
+interface IRequest {
   name: string
   email: string
   password: string
 }
 
+interface IResponse {
+  user: User
+}
+
 export class RegisterService {
   constructor(private readonly usersRepository: IUsersRepository) {}
 
-  async execute({ name, email, password }: RegisterServiceRequest) {
+  async execute({ name, email, password }: IRequest): Promise<IResponse> {
     const emailAlreadyExists = await this.usersRepository.findByEmail(email)
 
     if (emailAlreadyExists) {
@@ -21,10 +26,14 @@ export class RegisterService {
     const salt = await genSalt(10)
     const hashedPassword = await hash(password, salt)
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name,
       email,
       hashedPassword
     })
+
+    return {
+      user
+    }
   }
 }
