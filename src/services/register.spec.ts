@@ -35,13 +35,13 @@ describe('Register Service', () => {
       password: '123456'
     })
 
-    expect(async () => {
-      await registerService.execute({
+    await expect(() =>
+      registerService.execute({
         name: 'John Doe',
         email: 'john@doe.com',
         password: '123456'
       })
-    }).rejects.toBeInstanceOf(EmailAlreadyExistsError)
+    ).rejects.toBeInstanceOf(EmailAlreadyExistsError)
   })
 
   it('should be able to register a user', async () => {
