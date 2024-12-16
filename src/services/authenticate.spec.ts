@@ -1,18 +1,23 @@
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users.repository'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { AuthenticateService } from './authenticate.service'
 import { genSalt, hash } from 'bcryptjs'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 
-describe('Authenticate Service', () => {
-  it('should be able to authenticate a user', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateService(inMemoryUsersRepository)
+let usersRepository: InMemoryUsersRepository
+let sut: AuthenticateService
 
+describe('Authenticate Service', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new AuthenticateService(usersRepository)
+  })
+
+  it('should be able to authenticate a user', async () => {
     const salt = await genSalt(10)
     const hashedPassword = await hash('123456', salt)
 
-    await inMemoryUsersRepository.create({
+    await usersRepository.create({
       name: 'John Doe',
       email: 'john@doe.com',
       hashedPassword
@@ -27,9 +32,6 @@ describe('Authenticate Service', () => {
   })
 
   it('should not be able to authenticate a user with incorrect email', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateService(inMemoryUsersRepository)
-
     await expect(() =>
       sut.execute({
         email: 'jane@doe.com',
@@ -39,13 +41,10 @@ describe('Authenticate Service', () => {
   })
 
   it('should not be able to authenticate a user with incorrect password', async () => {
-    const inMemoryUsersRepository = new InMemoryUsersRepository()
-    const sut = new AuthenticateService(inMemoryUsersRepository)
-
     const salt = await genSalt(10)
     const hashedPassword = await hash('123456', salt)
 
-    await inMemoryUsersRepository.create({
+    await usersRepository.create({
       name: 'John Doe',
       email: 'john@doe.com',
       hashedPassword
