@@ -16,7 +16,6 @@ model User {
   role           Role     @default(USER)
 
   checkIns CheckIn[]
-  gym      Gym[]
 
   @@map("users")
 }
@@ -46,9 +45,7 @@ model Gym {
   phone       String?
   latitude    Decimal
   longitude   Decimal
-  userId      String  @map("user_id")
 
-  user     User      @relation(fields: [userId], references: [id])
   checkIns CheckIn[]
 
   @@map("gyms")
